@@ -9,11 +9,18 @@ import (
 )
 
 
+const (
+    G = 6.674
+)
+
+
 type Object struct {
+    Id          int
 	Mass        float64
 	Radius      float64
 	Position    gsMath.Vector2
     Velocity    gsMath.Vector2 
+    Delta       gsMath.Vector2
 
     Color       color.RGBA
 }
@@ -54,4 +61,26 @@ func (obj Object) Draw(screen *ebiten.Image) {
     options.GeoM.Translate(obj.Position.X-obj.Radius, obj.Position.Y-obj.Radius)
 
     screen.DrawImage(img, &options)
+}
+
+
+func (obj1 *Object) Update(objects []Object) {
+    obj1.Delta = gsMath.Vector2{X: 0, Y: 0}
+
+    for _, obj2 := range objects {
+        if obj1.Id == obj2.Id {
+            continue
+        }
+
+        dist := obj1.Position.Dist(obj2.Position)
+
+        f := G * ((obj1.Mass * obj2.Mass) / math.Pow(dist, 2))
+        dir := obj2.Position.Sub(obj1.Position).Normalize()
+        fVec := dir.Mult(f)
+
+        obj1.Delta = obj1.Delta.Add(fVec.Mult(1 / obj1.Mass))
+    }
+
+    obj1.Velocity = obj1.Velocity.Add(obj1.Delta)
+    obj1.Position = obj1.Position.Add(obj1.Velocity)
 }

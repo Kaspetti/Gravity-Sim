@@ -75,7 +75,7 @@ func (obj1 *Object) Update(objects []Object) {
         dist := obj1.Position.Dist(obj2.Position)
 
         f := G * ((obj1.Mass * obj2.Mass) / math.Pow(dist, 2))
-        dir := obj2.Position.Sub(obj1.Position).Normalize()
+        dir := obj2.Position.Sub(obj1.Position).Norm()
         fVec := dir.Mult(f)
 
         obj1.Delta = obj1.Delta.Add(fVec.Mult(1 / obj1.Mass))

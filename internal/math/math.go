@@ -33,6 +33,11 @@ func (v1 Vector2) Dist(v2 Vector2) float64 {
 }
 
 
-func (v Vector2) Normalize() Vector2 {
-    return v.Mult(1/math.Sqrt(math.Pow(v.X, 2) + math.Pow(v.Y, 2)))
+func (v Vector2) Norm() Vector2 {
+    return v.Mult(1/v.Len())
+}
+
+
+func (v Vector2) Len() float64 {
+    return math.Sqrt(math.Pow(v.X, 2) + math.Pow(v.Y, 2))
 }
